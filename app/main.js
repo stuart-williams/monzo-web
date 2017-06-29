@@ -1,33 +1,31 @@
 import React from 'react'
 import { render } from 'react-dom'
-import { createStore, combineReducers, applyMiddleware } from 'redux'
+import { createStore, combineReducers, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
 import { Switch, Route } from 'react-router'
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
-
 import * as reducers from './reducers'
+import Accounts from './components/Accounts'
 
 const history = createHistory()
 const middleware = routerMiddleware(history)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
 const store = createStore(
   combineReducers({
     ...reducers,
     router: routerReducer
   }),
-  applyMiddleware(middleware)
+  composeEnhancers(applyMiddleware(middleware))
 )
-
-const HelloWorld = () => <h1>Hello World</h1>
 
 render(
   <Provider store={store}>
     <ConnectedRouter history={history}>
       <div>
         <Switch>
-          <Route exact path='/' component={HelloWorld} />
-          <Route path='*' component={HelloWorld} />
+          <Route exact path='/' component={Accounts} />
         </Switch>
       </div>
     </ConnectedRouter>
