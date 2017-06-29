@@ -1,0 +1,10 @@
+html
+  head
+    title Login: Monzo Web
+  body
+    form(action='https://auth.getmondo.co.uk/')
+      input(type='hidden' name='client_id' value=clientId)
+      input(type='hidden' name='redirect_uri' value=redirectUri)
+      input(type='hidden' name='response_type' value=responseType)
+      input(type='hidden' name='state' value=state)
+      button(type='submit') Login
