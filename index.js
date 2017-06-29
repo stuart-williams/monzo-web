@@ -9,6 +9,7 @@ const port = 5000
 
 require('dotenv').config()
 
+app.use(express.static('public'))
 app.set('view engine', 'pug')
 
 app.use(session({
@@ -21,8 +22,10 @@ app.use(session({
 app.get('/', (req, res) => {
   if (req.session.userId) {
     return res.render('index', {
-      userId: req.session.userId,
-      accessToken: req.session.accessToken
+      user: {
+        id: req.session.userId,
+        token: req.session.accessToken
+      }
     })
   }
 

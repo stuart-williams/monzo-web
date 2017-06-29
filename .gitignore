@@ -23,4 +23,5 @@ SPECS
 SOURCES
 *.service
 
+public
 .env

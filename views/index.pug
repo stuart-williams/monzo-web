@@ -1,5 +1,8 @@
 html
   head
     title Home: Monzo Web
+  script.
+    user = (!{JSON.stringify(user)})
   body
-    h1 You're logged in!
+    #root
+    script(src='/main.js')
