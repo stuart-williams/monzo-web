@@ -19,7 +19,6 @@ app.use(session({
 }))
 
 app.get('/', (req, res) => {
-  console.log(req.session)
   if (req.session.userId) {
     return res.render('index', {
       userId: req.session.userId,
