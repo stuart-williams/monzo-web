@@ -2,28 +2,28 @@ const express = require('express')
 const app = express()
 const request = require('request')
 const session = require('express-session')
+const RedisStore = require('connect-redis')(session)
 
 const { auth } = require('./config.json')
 const port = 5000
 
 require('dotenv').config()
 
+app.set('view engine', 'pug')
+
 app.use(session({
   secret: '1234',
   resave: false,
   saveUninitialized: true,
-  cookie: {
-    secure: false,
-    maxAge: 60000
-  }
+  store: new RedisStore()
 }))
-app.set('view engine', 'pug')
 
 app.get('/', (req, res) => {
+  console.log(req.session)
   if (req.session.userId) {
     return res.render('index', {
-      userId: res.session.userId,
-      accessToken: res.session.accessToken
+      userId: req.session.userId,
+      accessToken: req.session.accessToken
     })
   }
 
