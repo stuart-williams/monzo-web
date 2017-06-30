@@ -1,4 +1,5 @@
 {
+  "apiBaseUrl": "https://api.monzo.com/",
   "auth": {
     "clientId": "oauthclient_00009LvzrWv2IfBmQ8BPTl",
     "redirectUri": "http://localhost:5000/auth-redirect"
