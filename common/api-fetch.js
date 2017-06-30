@@ -1,5 +1,5 @@
 const fetch = require('isomorphic-fetch')
-const { apiBaseUrl } = require('../../config.json')
+const { apiBaseUrl } = require('../config.json')
 
 module.exports = (user, path) => fetch(`${apiBaseUrl}${path}`, {
   headers: {
@@ -8,6 +8,6 @@ module.exports = (user, path) => fetch(`${apiBaseUrl}${path}`, {
 })
   .then((res) => res.json())
   .then((data) => {
-    if (data.error) throw new Error(data.message)
+    if (data.error) throw new Error(data)
     return data
   })

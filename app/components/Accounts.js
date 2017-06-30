@@ -1,5 +1,4 @@
 import React, { Component } from 'react'
-import fetch from '../common/api-fetch'
 
 export default class Account extends Component {
   constructor () {
@@ -10,11 +9,7 @@ export default class Account extends Component {
     }
   }
 
-  componentDidMount () {
-    fetch('accounts')
-      .then(({ accounts }) => { this.setState({ accounts }) })
-      .catch(({ message }) => { this.setState({ error: message }) })
-  }
+  componentDidMount () {}
 
   render () {
     if (this.state.error) return <p>{this.state.error}</p>

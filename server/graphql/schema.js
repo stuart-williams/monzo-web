@@ -1,6 +1,6 @@
 const { buildSchema } = require('graphql')
 const { addResolveFunctionsToSchema } = require('graphql-tools')
-const fetch = require('../common/api-fetch')
+const fetch = require('../../common/api-fetch')
 
 const resolverMap = {
   Account: {
