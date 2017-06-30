@@ -13,6 +13,11 @@ const resolverMap = {
     accounts: (parent, args, req) => {
       return fetch(req.session.user, 'accounts')
         .then(({ accounts }) => accounts)
+    },
+
+    account: (parent, { accountId }, req) => {
+      return fetch(req.session.user, 'accounts')
+        .then(({ accounts }) => accounts.find(({ id }) => id === accountId))
     }
   }
 }
@@ -34,6 +39,7 @@ const schema = buildSchema(`
 
   type Query {
     accounts: [Account]
+    account(accountId: String!): Account
   }
 `)
 
