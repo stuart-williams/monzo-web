@@ -1,3 +1,4 @@
+import 'typeface-roboto'
 import 'babel-polyfill'
 import 'es6-promise/auto'
 
@@ -11,6 +12,7 @@ import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-r
 import { ApolloProvider } from 'react-apollo'
 import apolloClient from './apollo-client'
 import * as reducers from './reducers'
+import { MuiThemeProvider } from 'material-ui/styles'
 
 // Route Components
 import Accounts from './components/Accounts'
@@ -30,16 +32,18 @@ const store = createStore(
 
 render(
   <Provider store={store}>
-    <ApolloProvider client={apolloClient}>
-      <ConnectedRouter history={history}>
-        <div>
-          <Switch>
-            <Route exact path='/' component={Accounts} />
-            <Route exact path='/account/:accountId' component={Account} />
-          </Switch>
-        </div>
-      </ConnectedRouter>
-    </ApolloProvider>
+    <MuiThemeProvider>
+      <ApolloProvider client={apolloClient}>
+        <ConnectedRouter history={history}>
+          <div>
+            <Switch>
+              <Route exact path='/' component={Accounts} />
+              <Route exact path='/account/:accountId' component={Account} />
+            </Switch>
+          </div>
+        </ConnectedRouter>
+      </ApolloProvider>
+    </MuiThemeProvider>
   </Provider>,
   document.getElementById('root')
 )

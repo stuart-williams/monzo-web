@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
 import moment from 'moment'
 
+import List, { ListItem, ListItemText } from 'material-ui/List'
+
 const Account = ({ data }) => {
   const { account } = data
 
@@ -14,11 +16,13 @@ const Account = ({ data }) => {
       <p>Type: {account.type}</p>
       <p>Balance: {account.balance.balance}</p>
       <p>Spent Today: {account.balance.spend_today}</p>
-      <ul>
+      <List>
         {account.transactions.map(({ id, merchant, amount }) => (
-          <li key={id}>{merchant ? merchant.name : 'Top up'} {amount}</li>
+          <ListItem key={id}>
+            <ListItemText primary={`${merchant ? merchant.name : 'Top up'} ${amount}`} />
+          </ListItem>
         ))}
-      </ul>
+      </List>
     </section>
   )
 }
