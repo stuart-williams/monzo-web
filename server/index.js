@@ -25,11 +25,6 @@ app.use('/graphql', graphqlHTTP({
   graphiql: true
 }))
 
-app.get('/', (req, res) => {
-  if (!req.session.user) res.redirect('/login')
-  res.render('index', { user: req.session.user })
-})
-
 app.get('/login', (req, res) => {
   res.render('login', {
     clientId: auth.clientId,
@@ -68,6 +63,11 @@ app.get('/auth-redirect', (req, res) => {
     req.session.user = { id, token }
     res.redirect('/')
   })
+})
+
+app.get('*', (req, res) => {
+  if (!req.session.user) res.redirect('/login')
+  res.render('index', { user: req.session.user })
 })
 
 app.listen(port, () => console.log(`Monzo Web listening on port ${port}`))

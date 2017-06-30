@@ -11,7 +11,10 @@ import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-r
 import { ApolloProvider } from 'react-apollo'
 import apolloClient from './apollo-client'
 import * as reducers from './reducers'
+
+// Route Components
 import Accounts from './components/Accounts'
+import Account from './components/Account'
 
 const history = createHistory()
 const middleware = routerMiddleware(history)
@@ -32,6 +35,7 @@ render(
         <div>
           <Switch>
             <Route exact path='/' component={Accounts} />
+            <Route exact path='/account/:accountId' component={Account} />
           </Switch>
         </div>
       </ConnectedRouter>

@@ -1,13 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
+import { Link } from 'react-router-dom'
 
 const Accounts = ({ data: { accounts = [] } }) => (
   <ul>
-    {accounts.map(({ id, description, type, balance }) => (
-      <div key={id}>
-        {`${description} ${type} ${balance.currency}${balance.balance}`}
-      </div>
+    {accounts.map(({ id, description, type }) => (
+      <Link key={id} to={`/account/${id}`}>{description} {type}</Link>
     ))}
   </ul>
 )
@@ -21,11 +20,7 @@ export default graphql(gql`
     accounts {
       id
       description
-      type,
-      balance {
-        balance
-        currency
-      }
+      type
     }
   }
 `)(Accounts)
