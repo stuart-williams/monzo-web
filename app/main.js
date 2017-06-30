@@ -8,6 +8,8 @@ import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
 import { Switch, Route } from 'react-router'
 import { ConnectedRouter, routerReducer, routerMiddleware } from 'react-router-redux'
+import { ApolloProvider } from 'react-apollo'
+import apolloClient from './apollo-client'
 import * as reducers from './reducers'
 import Accounts from './components/Accounts'
 
@@ -25,13 +27,15 @@ const store = createStore(
 
 render(
   <Provider store={store}>
-    <ConnectedRouter history={history}>
-      <div>
-        <Switch>
-          <Route exact path='/' component={Accounts} />
-        </Switch>
-      </div>
-    </ConnectedRouter>
+    <ApolloProvider client={apolloClient}>
+      <ConnectedRouter history={history}>
+        <div>
+          <Switch>
+            <Route exact path='/' component={Accounts} />
+          </Switch>
+        </div>
+      </ConnectedRouter>
+    </ApolloProvider>
   </Provider>,
   document.getElementById('root')
 )

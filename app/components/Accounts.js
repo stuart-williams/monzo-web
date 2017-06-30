@@ -1,28 +1,31 @@
-import React, { Component } from 'react'
+import React from 'react'
+import PropTypes from 'prop-types'
+import { gql, graphql } from 'react-apollo'
 
-export default class Account extends Component {
-  constructor () {
-    super()
+const Accounts = ({ data: { accounts = [] } }) => (
+  <ul>
+    {accounts.map(({ id, description, type, balance }) => (
+      <div key={id}>
+        {`${description} ${type} ${balance.currency}${balance.balance}`}
+      </div>
+    ))}
+  </ul>
+)
 
-    this.state = {
-      accounts: []
+Accounts.propTypes = {
+  data: PropTypes.object.isRequired
+}
+
+export default graphql(gql`
+  query Accounts {
+    accounts {
+      id
+      description
+      type,
+      balance {
+        balance
+        currency
+      }
     }
   }
-
-  componentDidMount () {}
-
-  render () {
-    if (this.state.error) return <p>{this.state.error}</p>
-
-    return (
-      <ul>
-        {this.state.accounts.map(({ id, description, type }) => (
-          <div key={id}>
-            <span>{description}</span>
-            <span>{type}</span>
-          </div>
-        ))}
-      </ul>
-    )
-  }
-}
+`)(Accounts)

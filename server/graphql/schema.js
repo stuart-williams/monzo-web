@@ -4,14 +4,14 @@ const fetch = require('../../common/api-fetch')
 
 const resolverMap = {
   Account: {
-    balance (parent, args, context) {
-      return fetch(context.session.user, `balance?account_id=${parent.id}`)
+    balance (parent, args, req) {
+      return fetch(req.session.user, `balance?account_id=${parent.id}`)
     }
   },
 
   Query: {
-    accounts: (parent, args, context) => {
-      return fetch(context.session.user, 'accounts')
+    accounts: (parent, args, req) => {
+      return fetch(req.session.user, 'accounts')
         .then(({ accounts }) => accounts)
     }
   }
@@ -21,6 +21,7 @@ const schema = buildSchema(`
   type Account {
     id: String!
     description: String
+    type: String
     created: String
     balance: Balance
   }

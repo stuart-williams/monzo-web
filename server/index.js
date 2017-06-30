@@ -20,6 +20,11 @@ app.use(session({
   store: new RedisStore()
 }))
 
+app.use('/graphql', graphqlHTTP({
+  schema: require('./graphql/schema'),
+  graphiql: true
+}))
+
 app.get('/', (req, res) => {
   if (!req.session.user) res.redirect('/login')
   res.render('index', { user: req.session.user })
@@ -64,10 +69,5 @@ app.get('/auth-redirect', (req, res) => {
     res.redirect('/')
   })
 })
-
-app.use('/graphql', graphqlHTTP({
-  schema: require('./graphql/schema'),
-  graphiql: true
-}))
 
 app.listen(port, () => console.log(`Monzo Web listening on port ${port}`))
