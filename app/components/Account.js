@@ -27,7 +27,7 @@ Account.propTypes = {
 }
 
 export default graphql(gql`
-  query($accountId: String!) {
+  query($accountId: String!, $limit: Int, $since: String, $before: String) {
     account(accountId: $accountId) {
       id
       description
@@ -37,7 +37,7 @@ export default graphql(gql`
         currency
         spend_today
       }
-      transactions {
+      transactions(limit: $limit, since: $since, before: $before) {
         id
         amount
         merchant {
@@ -49,7 +49,8 @@ export default graphql(gql`
 `, {
     options: ({ match }) => ({
       variables: {
-        accountId: match.params.accountId
+        accountId: match.params.accountId,
+        since: '2017-06-01T23:00:00Z'
       }
     })
   })(Account)

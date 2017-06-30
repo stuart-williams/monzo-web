@@ -1,16 +1,16 @@
+const querystring = require('querystring')
 const { buildSchema } = require('graphql')
 const { addResolveFunctionsToSchema } = require('graphql-tools')
 const fetch = require('../../common/api-fetch')
 
 const resolverMap = {
   Account: {
-    balance (parent, args, req) {
-      return fetch(req.session.user, `balance?account_id=${parent.id}`)
-    },
+    balance: (parent, args, req) => fetch(req.session.user, `balance?account_id=${parent.id}`),
 
-    // TODO: Get limit, since and before from args and construct query
-    transactions (parent, args, req) {
-      return fetch(req.session.user, `transactions?account_id=${parent.id}&expand[]=merchant&since=2017-06-01T23:00:00Z`)
+    transactions: (parent, { limit, since, before }, req) => {
+      const query = querystring.stringify({ account_id: parent.id, 'expand[]': 'merchant', limit, since, before })
+
+      return fetch(req.session.user, `transactions?${query}`)
         .then(({ transactions }) => transactions)
     }
   },
