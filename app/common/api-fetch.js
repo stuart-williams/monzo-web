@@ -8,6 +8,8 @@ export default (path) => fetch(`${apiBaseUrl}${path}`, {
 })
   .then((res) => res.json())
   .then((data) => {
+    // Session has expired so ask the user to sign in again
+    if (data.invalid_token) return window.location.replace('/logout')
     if (data.error) throw new Error(data.message)
     return data
   })

@@ -20,21 +20,22 @@ app.use(session({
 }))
 
 app.get('/', (req, res) => {
-  if (req.session.userId) {
-    return res.render('index', {
-      user: {
-        id: req.session.userId,
-        token: req.session.accessToken
-      }
-    })
-  }
+  if (!req.session.user) res.redirect('/login')
+  res.render('index', { user: req.session.user })
+})
 
+app.get('/login', (req, res) => {
   res.render('login', {
     clientId: auth.clientId,
     redirectUri: auth.redirectUri,
     responseType: 'code',
     state: '1234'
   })
+})
+
+app.get('/logout', (req, res) => {
+  req.session.user = null
+  res.redirect('/login')
 })
 
 app.get('/auth-redirect', (req, res) => {
@@ -56,14 +57,11 @@ app.get('/auth-redirect', (req, res) => {
       return res.send('Oops, someting went wrong...')
     }
 
-    const { user_id: userId, access_token: accessToken } = JSON.parse(body)
+    const { user_id: id, access_token: token } = JSON.parse(body)
 
-    req.session.userId = userId
-    req.session.accessToken = accessToken
-    req.session.save(() => res.redirect('/'))
+    req.session.user = { id, token }
+    res.redirect('/')
   })
 })
 
-app.listen(port, () => {
-  console.log(`Monzo Web listening on port ${port}`)
-})
+app.listen(port, () => console.log(`Monzo Web listening on port ${port}`))
