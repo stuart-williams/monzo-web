@@ -6,6 +6,11 @@ const resolverMap = {
   Account: {
     balance (parent, args, req) {
       return fetch(req.session.user, `balance?account_id=${parent.id}`)
+    },
+
+    transactions (parent, args, req) {
+      return fetch(req.session.user, `transactions?account_id=${parent.id}&expand[]=merchant`)
+        .then(({ transactions }) => transactions)
     }
   },
 
@@ -24,17 +29,29 @@ const resolverMap = {
 
 const schema = buildSchema(`
   type Account {
-    id: String!
+    id: String
     description: String
     type: String
     created: String
     balance: Balance
+    transactions: [Transaction]
   }
 
   type Balance {
     balance: Int
     currency: String
     spend_today: Int
+  }
+
+  type Transaction {
+    id: String
+    amount: Int
+    merchant: Merchant
+  }
+
+  type Merchant {
+    id: String
+    name: String
   }
 
   type Query {
