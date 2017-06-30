@@ -3,8 +3,9 @@ const app = express()
 const request = require('request')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
+const graphqlHTTP = require('express-graphql')
 
-const { auth } = require('./config.json')
+const { auth } = require('../config.json')
 const port = 5000
 
 require('dotenv').config()
@@ -63,5 +64,10 @@ app.get('/auth-redirect', (req, res) => {
     res.redirect('/')
   })
 })
+
+app.use('/graphql', graphqlHTTP({
+  schema: require('./graphql/schema'),
+  graphiql: true
+}))
 
 app.listen(port, () => console.log(`Monzo Web listening on port ${port}`))

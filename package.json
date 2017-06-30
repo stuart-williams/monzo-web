@@ -9,7 +9,10 @@
     "dotenv": "^4.0.0",
     "es6-promise": "^4.1.1",
     "express": "^4.15.3",
+    "express-graphql": "^0.6.6",
     "express-session": "^1.15.3",
+    "graphql": "^0.10.3",
+    "graphql-tools": "^1.1.0",
     "history": "^4.6.3",
     "isomorphic-fetch": "^2.2.1",
     "pug": "^2.0.0-rc.2",
@@ -39,7 +42,7 @@
     "webpack": "^3.0.0"
   },
   "scripts": {
-    "start": "nodemon index",
+    "start": "nodemon server",
     "dev": "webpack -w"
   }
 }
