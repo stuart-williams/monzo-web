@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
+import moment from 'moment'
 
 const Account = ({ data }) => {
   const { account } = data
@@ -50,7 +51,7 @@ export default graphql(gql`
     options: ({ match }) => ({
       variables: {
         accountId: match.params.accountId,
-        since: '2017-06-01T23:00:00Z'
+        since: moment().subtract(1, 'month').format()
       }
     })
   })(Account)
