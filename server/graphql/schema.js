@@ -8,8 +8,9 @@ const resolverMap = {
       return fetch(req.session.user, `balance?account_id=${parent.id}`)
     },
 
+    // TODO: Get limit, since and before from args and construct query
     transactions (parent, args, req) {
-      return fetch(req.session.user, `transactions?account_id=${parent.id}&expand[]=merchant`)
+      return fetch(req.session.user, `transactions?account_id=${parent.id}&expand[]=merchant&since=2017-06-01T23:00:00Z`)
         .then(({ transactions }) => transactions)
     }
   },
@@ -34,7 +35,7 @@ const schema = buildSchema(`
     type: String
     created: String
     balance: Balance
-    transactions: [Transaction]
+    transactions(limit: Int, since: String, before: String): [Transaction]
   }
 
   type Balance {

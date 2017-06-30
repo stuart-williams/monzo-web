@@ -13,6 +13,11 @@ const Account = ({ data }) => {
       <p>Type: {account.type}</p>
       <p>Balance: {account.balance.balance}</p>
       <p>Spent Today: {account.balance.spend_today}</p>
+      <ul>
+        {account.transactions.map(({ id, merchant, amount }) => (
+          <li key={id}>{merchant ? merchant.name : 'Top up'} {amount}</li>
+        ))}
+      </ul>
     </section>
   )
 }
@@ -31,6 +36,13 @@ export default graphql(gql`
         balance
         currency
         spend_today
+      }
+      transactions {
+        id
+        amount
+        merchant {
+          name
+        }
       }
     }
   }
