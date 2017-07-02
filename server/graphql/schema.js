@@ -62,6 +62,7 @@ const schema = buildSchema(`
     currency: String
     description: String
     notes: String
+    category: String
     merchant: Merchant
     metadata: TransactionMeta
   }

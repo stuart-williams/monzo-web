@@ -6,15 +6,19 @@ import Avatar from 'material-ui/Avatar'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import AddCircle from 'material-ui-icons/AddCircle'
+import categoryIcons from '../utils/category-icons'
 
 const Transaction = (transaction) => {
-  const { merchant, description, notes, amount, currency, metadata: meta } = transaction
+  const { merchant, description, notes, amount, currency, category, metadata: meta } = transaction
   const displayAmount = formatAmount(currency, amount)
+  const CategoryIcon = categoryIcons[category]
 
   if (merchant) {
     return (
       <ListItem>
-        <Avatar src={merchant.logo} />
+        {merchant.logo
+          ? <Avatar src={merchant.logo} />
+          : <Avatar>{CategoryIcon ? <CategoryIcon /> : merchant.name[0]}</Avatar>}
         <ListItemText primary={merchant.name + ' ' + displayAmount} />
       </ListItem>
     )
@@ -23,7 +27,7 @@ const Transaction = (transaction) => {
   if (meta && meta.is_topup === 'true') {
     return (
       <ListItem>
-        <Avatar style={{ backgroundColor: 'green' }}>
+        <Avatar>
           <AddCircle />
         </Avatar>
         <ListItemText primary={description + ' +' + displayAmount} />
@@ -33,7 +37,7 @@ const Transaction = (transaction) => {
 
   return (
     <ListItem>
-      <Avatar />
+      <Avatar>{CategoryIcon ? <CategoryIcon /> : description[0]}</Avatar>
       <ListItemText
         primary={description + ' ' + displayAmount}
         secondary={notes}
@@ -71,6 +75,7 @@ export default graphql(gql`
       notes
       amount
       currency
+      category
       metadata {
         is_topup
       }
