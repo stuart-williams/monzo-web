@@ -6,6 +6,7 @@
   "dependencies": {
     "babel-polyfill": "^6.23.0",
     "connect-redis": "^3.3.0",
+    "currency-symbol-map": "^4.0.1",
     "dotenv": "^4.0.0",
     "es6-promise": "^4.1.1",
     "express": "^4.15.3",
@@ -16,6 +17,7 @@
     "history": "^4.6.3",
     "isomorphic-fetch": "^2.2.1",
     "material-ui": "next",
+    "material-ui-icons": "^1.0.0-alpha.19",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "pug": "^2.0.0-rc.2",
