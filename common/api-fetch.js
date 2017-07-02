@@ -8,6 +8,6 @@ module.exports = (user, path) => fetch(`${apiBaseUrl}${path}`, {
 })
   .then((res) => res.json())
   .then((data) => {
-    if (data.error) throw new Error(data)
+    if (data.error) throw new Error(data.error)
     return data
   })

@@ -3,9 +3,10 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
 import formatAmount from '../utils/format-amount'
+import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Transactions from './Transactions'
 
-const Account = ({ match, data }) => {
+const Account = ({ match, data, classes }) => {
   const accountId = match.params.accountId
   const { account } = data
 
@@ -14,7 +15,7 @@ const Account = ({ match, data }) => {
   const { balance, currency, spend_today: spentToday } = account.balance
 
   return (
-    <section>
+    <section className={classes.container}>
       <h1>{account.description}</h1>
       <p>Balance: {formatAmount(currency, balance)}</p>
       <p>Spent Today: {formatAmount(currency, spentToday)}</p>
@@ -28,10 +29,11 @@ const Account = ({ match, data }) => {
 
 Account.propTypes = {
   match: PropTypes.object.isRequired,
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 }
 
-export default graphql(gql`
+const AccountWithData = graphql(gql`
   query Account($accountId: String!) {
     account(accountId: $accountId) {
       id
@@ -50,3 +52,12 @@ export default graphql(gql`
       }
     })
   })(Account)
+
+const styleSheet = createStyleSheet('Account', {
+  container: {
+    width: '900px',
+    margin: 'auto'
+  }
+})
+
+export default withStyles(styleSheet)(AccountWithData)
