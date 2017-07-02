@@ -1,20 +1,15 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
-import getSymbolFromCurrency from 'currency-symbol-map'
+import formatAmount from '../utils/format-amount'
 import Avatar from 'material-ui/Avatar'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import AddCircle from 'material-ui-icons/AddCircle'
 
-function parseAmount (n) {
-  return (Math.abs(n) / 100).toFixed(2)
-}
-
 const Transaction = (transaction) => {
   const { merchant, description, notes, amount, currency, metadata: meta } = transaction
-  const currencySymbol = getSymbolFromCurrency(currency)
-  const displayAmount = `${currencySymbol}${parseAmount(amount)}`
+  const displayAmount = formatAmount(currency, amount)
 
   if (merchant) {
     return (

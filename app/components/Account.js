@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
+import formatAmount from '../utils/format-amount'
 import Transactions from './Transactions'
 
 const Account = ({ match, data }) => {
@@ -10,12 +11,13 @@ const Account = ({ match, data }) => {
 
   if (!account) return <p>Loading...</p>
 
+  const { balance, currency, spend_today: spentToday } = account.balance
+
   return (
     <section>
       <h1>{account.description}</h1>
-      <p>Type: {account.type}</p>
-      <p>Balance: {account.balance.balance}</p>
-      <p>Spent Today: {account.balance.spend_today}</p>
+      <p>Balance: {formatAmount(currency, balance)}</p>
+      <p>Spent Today: {formatAmount(currency, spentToday)}</p>
       <Transactions
         accountId={accountId}
         since={moment().subtract(1, 'month').format()}
@@ -34,7 +36,6 @@ export default graphql(gql`
     account(accountId: $accountId) {
       id
       description
-      type
       balance {
         balance
         currency
