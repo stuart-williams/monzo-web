@@ -3,13 +3,17 @@ const app = express()
 const request = require('request')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
-const graphqlHTTP = require('express-graphql')
+const { graphql } = require('graphql')
+const bodyParser = require('body-parser')
 
+const schema = require('./graphql/schema')
 const { auth } = require('../config.json')
 const port = 5000
+const sessionExpired = (errors) => !!(Array.isArray(errors) && errors.find(({ message }) => message === 'invalid_token'))
 
 require('dotenv').config()
 
+app.use(bodyParser.json())
 app.use(express.static('public'))
 app.set('view engine', 'pug')
 
@@ -20,10 +24,17 @@ app.use(session({
   store: new RedisStore()
 }))
 
-app.use('/graphql', graphqlHTTP({
-  schema: require('./graphql/schema'),
-  graphiql: true
-}))
+app.use('/graphql', (req, res) => {
+  graphql(schema, req.body.query, null, req, req.body.variables)
+    .then((response) => {
+      if (sessionExpired(response.errors)) {
+        res.status(401).json(response)
+      } else {
+        res.status(200).json(response)
+      }
+    })
+    .catch((error) => res.status(500).json(error))
+})
 
 app.get('/login', (req, res) => {
   res.render('login', {
