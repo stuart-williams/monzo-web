@@ -8,13 +8,14 @@ import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { ApolloProvider } from 'react-apollo'
 import apolloClient from './apollo-client'
 import { MuiThemeProvider } from 'material-ui/styles'
+import theme from './styles/monzo-theme'
 
 // Route Components
 import Accounts from './components/Accounts'
 import Account from './components/Account'
 
 render(
-  <MuiThemeProvider>
+  <MuiThemeProvider theme={theme}>
     <ApolloProvider client={apolloClient}>
       <Router>
         <div>

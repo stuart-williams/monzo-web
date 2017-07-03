@@ -3,9 +3,11 @@ import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
 import formatAmount from '../utils/format-amount'
 import Avatar from 'material-ui/Avatar'
+import { withStyles, createStyleSheet } from 'material-ui/styles'
 import List, { ListItem, ListItemText } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import AddCircle from 'material-ui-icons/AddCircle'
+import { CircularProgress } from 'material-ui/Progress'
 import categoryIcons from '../utils/category-icons'
 
 const Transaction = (transaction) => {
@@ -46,10 +48,16 @@ const Transaction = (transaction) => {
   )
 }
 
-const Transactions = ({ data }) => {
+const Transactions = ({ data, classes }) => {
   const { transactions } = data
 
-  if (!transactions) return <p>Loading...</p>
+  if (!transactions) {
+    return (
+      <div className={classes.progressCt}>
+        <CircularProgress className={classes.progress} />
+      </div>
+    )
+  }
 
   return (
     <List>
@@ -64,10 +72,11 @@ const Transactions = ({ data }) => {
 }
 
 Transactions.propTypes = {
-  data: PropTypes.object.isRequired
+  data: PropTypes.object.isRequired,
+  classes: PropTypes.object.isRequired
 }
 
-export default graphql(gql`
+const TransactionsWithData = graphql(gql`
   query Account($accountId: String!, $since: String) {
     transactions(accountId: $accountId, since: $since) {
       id
@@ -93,3 +102,15 @@ export default graphql(gql`
       }
     })
   })(Transactions)
+
+const styleSheet = createStyleSheet('Transactions', (theme) => ({
+  progressCt: {
+    display: 'flex',
+    justifyContent: 'center'
+  },
+  progress: {
+    margin: theme.spacing.unit * 2
+  }
+}))
+
+export default withStyles(styleSheet)(TransactionsWithData)

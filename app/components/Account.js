@@ -10,11 +10,8 @@ import Transactions from './Transactions'
 
 const Account = ({ match, data, classes }) => {
   const accountId = match.params.accountId
-  const { account } = data
-
-  if (!account) return <p>Loading...</p>
-
-  const { balance, currency, spend_today: spentToday } = account.balance
+  const { account = { balance: {} } } = data
+  const { balance = 0, currency, spend_today: spentToday = 0 } = account.balance
 
   return (
     <section className={classes.container}>
@@ -23,6 +20,7 @@ const Account = ({ match, data, classes }) => {
           <Grid item xs={12} sm={6}>
             <Typography
               type='subheading'
+              gutterBottom
               className={classes.headerSubheading}
             >
               Balance
@@ -37,6 +35,7 @@ const Account = ({ match, data, classes }) => {
           <Grid item xs={12} sm={6}>
             <Typography
               type='subheading'
+              gutterBottom
               className={classes.headerSubheading}
               align='right'
             >
@@ -86,26 +85,27 @@ const AccountWithData = graphql(gql`
     })
   })(Account)
 
-// TODO: How am I going to organise colours/theming??
-const styleSheet = createStyleSheet('Account', {
+const styleSheet = createStyleSheet('Account', (theme) => ({
   container: {
-    width: '890px',
+    width: 890,
     margin: 'auto',
     boxShadow: '0 1px 1px 0 rgba(0,0,0,0.06), 0 2px 5px 0 rgba(0,0,0,0.2)'
   },
 
   header: {
-    padding: '20px',
-    backgroundColor: '#13233C'
+    padding: 20,
+    backgroundColor: theme.palette.primary[500],
+    color: theme.palette.getContrastText(theme.palette.primary[500])
   },
 
   headerSubheading: {
-    color: 'rgba(255, 255, 255, 0.3)'
+    color: 'inherit',
+    opacity: 0.3
   },
 
   headerTitle: {
-    color: 'white'
+    color: 'inherit'
   }
-})
+}))
 
 export default withStyles(styleSheet)(AccountWithData)

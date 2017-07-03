@@ -1,2 +1,1 @@
-export const primary1Color = '#13233C'
-// export const accent1Color = '#144673'
+export const monzoDark = '#13233C'
