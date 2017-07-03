@@ -56,6 +56,7 @@ const styleSheet = createStyleSheet('Account', (theme) => ({
   container: {
     width: 600,
     margin: '10px auto',
+    backgroundColor: '#fff',
     boxShadow: '0 1px 1px 0 rgba(0,0,0,0.06), 0 2px 5px 0 rgba(0,0,0,0.2)'
   }
 }))

@@ -2,49 +2,44 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
 import formatAmount from '../utils/format-amount'
-import Avatar from 'material-ui/Avatar'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
-import List, { ListItem, ListItemText } from 'material-ui/List'
+import List from 'material-ui/List'
 import Divider from 'material-ui/Divider'
-import AddCircle from 'material-ui-icons/AddCircle'
 import { CircularProgress } from 'material-ui/Progress'
-import categoryIcons from '../utils/category-icons'
+import MerchantTransaction from './MerchantTransaction'
+import TopupTransaction from './TopupTransaction'
+import TransferTransaction from './TransferTransaction'
 
 const Transaction = (transaction) => {
-  const { merchant, description, notes, amount, currency, category, metadata: meta } = transaction
+  const { merchant, description, notes, amount, currency, category, metadata: meta = {} } = transaction
   const displayAmount = formatAmount(currency, amount)
-  const CategoryIcon = categoryIcons[category]
 
   if (merchant) {
     return (
-      <ListItem>
-        {merchant.logo
-          ? <Avatar src={merchant.logo} />
-          : <Avatar>{CategoryIcon ? <CategoryIcon /> : merchant.name[0]}</Avatar>}
-        <ListItemText primary={merchant.name + ' ' + displayAmount} />
-      </ListItem>
+      <MerchantTransaction
+        logo={merchant.logo}
+        name={merchant.name}
+        category={category}
+        amount={displayAmount}
+      />
     )
   }
 
-  if (meta && meta.is_topup === 'true') {
+  if (meta.is_topup === 'true') {
     return (
-      <ListItem>
-        <Avatar>
-          <AddCircle />
-        </Avatar>
-        <ListItemText primary={description + ' +' + displayAmount} />
-      </ListItem>
+      <TopupTransaction
+        description={description}
+        amount={displayAmount}
+      />
     )
   }
 
   return (
-    <ListItem>
-      <Avatar>{CategoryIcon ? <CategoryIcon /> : description[0]}</Avatar>
-      <ListItemText
-        primary={description + ' ' + displayAmount}
-        secondary={notes}
-      />
-    </ListItem>
+    <TransferTransaction
+      description={description}
+      notes={notes}
+      amount={displayAmount}
+    />
   )
 }
 
