@@ -9,7 +9,7 @@ const bodyParser = require('body-parser')
 const schema = require('./graphql/schema')
 const { auth } = require('../config.json')
 const port = 5000
-const sessionExpired = (errors) => !!(Array.isArray(errors) && errors.find(({ message }) => message === 'invalid_token'))
+const sessionExpired = (errors) => !!(errors && errors.find(({ message }) => message === 'invalid_token'))
 
 require('dotenv').config()
 
