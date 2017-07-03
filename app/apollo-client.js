@@ -7,11 +7,19 @@ const networkInterface = createNetworkInterface({
   }
 })
 
+const sessionExpired = (errors) => Array.isArray(errors) && errors.find(({ message }) => message === 'invalid_token')
+
+// TODO: Can we not return a 401 response code??
 networkInterface.useAfter([{
-  applyAfterware({ res }, next) {
-    // TODO: Add logout if token expires window.location.replace('/logout')
-    debugger
-    next()
+  applyAfterware ({ response }, next) {
+    response.json()
+      .then(({ errors }) => {
+        if (sessionExpired(errors)) {
+          window.location.replace('/logout')
+        } else {
+          next()
+        }
+      })
   }
 }])
 
