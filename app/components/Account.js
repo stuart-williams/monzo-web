@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
+import Paper from 'material-ui/Paper'
 import AccountHeader from './AccountHeader'
 import Transactions from './Transactions'
 
@@ -14,14 +15,17 @@ const Account = ({ match, data, classes }) => {
   return (
     <section className={classes.container}>
       <AccountHeader
+        className={classes.header}
         currency={currency}
         balance={balance}
         spentToday={spentToday}
       />
-      <Transactions
-        accountId={accountId}
-        since={moment().subtract(1, 'month').format()}
-      />
+      <Paper className={classes.transactions}>
+        <Transactions
+          accountId={accountId}
+          since={moment().subtract(1, 'month').format()}
+        />
+      </Paper>
     </section>
   )
 }
@@ -55,9 +59,19 @@ const AccountWithData = graphql(gql`
 const styleSheet = createStyleSheet('Account', (theme) => ({
   container: {
     width: 600,
-    margin: '10px auto',
-    backgroundColor: '#fff',
-    boxShadow: '0 1px 1px 0 rgba(0,0,0,0.06), 0 2px 5px 0 rgba(0,0,0,0.2)'
+    margin: 'auto',
+    backgroundColor: '#fff'
+  },
+
+  header: {
+    width: 600,
+    position: 'fixed',
+    boxSizing: 'border-box',
+    zIndex: theme.zIndex.appBar
+  },
+
+  transactions: {
+    paddingTop: 91
   }
 }))
 

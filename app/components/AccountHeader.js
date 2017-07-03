@@ -1,12 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import classNames from 'classnames'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
-import Typography from 'material-ui/Typography'
+import Paper from 'material-ui/Paper'
 import Grid from 'material-ui/Grid'
+import Typography from 'material-ui/Typography'
 import formatAmount from '../utils/format-amount'
 
-const AccountHeader = ({ balance = 0, currency, spentToday = 0, classes }) => (
-  <div className={classes.header}>
+const AccountHeader = ({ balance = 0, currency, spentToday = 0, className, classes }) => (
+  <Paper
+    elevation={2}
+    className={classNames(className, classes.header)}
+  >
     <Grid container>
       <Grid item xs={12} sm={6}>
         <Typography
@@ -41,13 +46,14 @@ const AccountHeader = ({ balance = 0, currency, spentToday = 0, classes }) => (
         </Typography>
       </Grid>
     </Grid>
-  </div>
+  </Paper>
 )
 
 AccountHeader.propTypes = {
   balance: PropTypes.number,
   currency: PropTypes.string,
   spentToday: PropTypes.number,
+  className: PropTypes.string,
   classes: PropTypes.object.isRequired
 }
 
@@ -55,9 +61,7 @@ const styleSheet = createStyleSheet('AccountHeader', (theme) => ({
   header: {
     padding: 20,
     backgroundColor: theme.palette.primary[500],
-    color: theme.palette.getContrastText(theme.palette.primary[500]),
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10
+    color: theme.palette.getContrastText(theme.palette.primary[500])
   },
 
   headerSubheading: {
