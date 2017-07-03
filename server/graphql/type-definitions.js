@@ -21,6 +21,7 @@ module.exports = `
     description: String
     notes: String
     category: String
+    created: String
     merchant: Merchant
     metadata: TransactionMeta
   }

@@ -3,5 +3,23 @@
   "auth": {
     "clientId": "oauthclient_00009LvzrWv2IfBmQ8BPTl",
     "redirectUri": "http://localhost:5000/auth-redirect"
+  },
+  "calendarFormats": {
+    "date": {
+      "sameDay": "[Today]",
+      "nextDay": "[Tomorrow]",
+      "nextWeek": "dddd Do MMMM",
+      "lastDay": "[Yesterday]",
+      "lastWeek": "dddd Do MMMM",
+      "sameElse": "dddd Do MMMM"
+    },
+    "dateTime": {
+      "sameDay": "[Today] [at] HH:mm",
+      "nextDay": "[Tomorrow] [at] HH:mm",
+      "nextWeek": "dddd Do MMMM [at] HH:mm",
+      "lastDay": "[Yesterday] [at] HH:mm",
+      "lastWeek": "dddd Do MMMM [at] HH:mm",
+      "sameElse": "dddd Do MMMM [at] HH:mm"
+    }
   }
 }
