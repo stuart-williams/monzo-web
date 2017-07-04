@@ -60,6 +60,7 @@ const styleSheet = createStyleSheet('Account', (theme) => ({
   container: {
     width: 600,
     margin: 'auto',
+    height: '100%',
     backgroundColor: '#fff'
   },
 
@@ -71,7 +72,10 @@ const styleSheet = createStyleSheet('Account', (theme) => ({
   },
 
   transactions: {
-    paddingTop: 91
+    paddingTop: 91,
+    boxSizing: 'border-box',
+    overflow: 'scroll',
+    height: '100%'
   }
 }))
 
