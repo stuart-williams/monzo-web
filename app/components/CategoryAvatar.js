@@ -12,6 +12,7 @@ import Shopping from 'material-ui-icons/ShoppingBasket'
 import Holidays from 'material-ui-icons/FlightTakeoff'
 import Expenses from 'material-ui-icons/AccountBalanceWallet'
 import General from 'material-ui-icons/Help'
+import { red, amber, orange, blueGrey, teal, cyan, pink, purple, lime } from 'material-ui/styles/colors'
 
 const icons = {
   eating_out: EatingOut,
@@ -43,17 +44,32 @@ CategoryIcon.propTypes = {
 
 const styleSheet = createStyleSheet('CategoryIcon', (theme) => ({
   eating_out: {
-    backgroundColor: 'red'
+    backgroundColor: red[300]
   },
-  transport: {},
-  groceries: {},
-  cash: {},
-  bills: {},
-  entertainment: {},
-  shopping: {},
-  holidays: {},
-  expenses: {},
-  general: {}
+  transport: {
+    backgroundColor: blueGrey[300]
+  },
+  groceries: {
+    backgroundColor: amber[300]
+  },
+  cash: {
+    backgroundColor: teal[300]
+  },
+  bills: {
+    backgroundColor: cyan[300]
+  },
+  entertainment: {
+    backgroundColor: orange[300]
+  },
+  shopping: {
+    backgroundColor: pink[300]
+  },
+  holidays: {
+    backgroundColor: purple[300]
+  },
+  expenses: {
+    backgroundColor: lime[300]
+  }
 }))
 
 export default withStyles(styleSheet)(CategoryIcon)
