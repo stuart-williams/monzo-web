@@ -8,6 +8,6 @@ function getDate (date) {
 export default function groupTransactionsByDate (transactions) {
   return transactions.reduce((accum, transaction) => {
     const key = getDate(transaction.created)
-    return Object.assign(accum, { [key]: [].concat(accum[key] || [], transaction) })
+    return Object.assign(accum, { [key]: [].concat(transaction, accum[key] || []) })
   }, {})
 }
