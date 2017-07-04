@@ -13,6 +13,7 @@ import theme from './styles/monzo-theme'
 // Route Components
 import Accounts from './components/Accounts'
 import Account from './components/Account'
+import Transaction from './components/Transaction'
 
 render(
   <MuiThemeProvider theme={theme}>
@@ -20,7 +21,8 @@ render(
       <Router>
         <div>
           <Route exact path='/' component={Accounts} />
-          <Route exact path='/account/:accountId' component={Account} />
+          <Route path='/account/:accountId' component={Account} />
+          <Route path='/transaction/:transactionId' component={Transaction} />
         </div>
       </Router>
     </ApolloProvider>

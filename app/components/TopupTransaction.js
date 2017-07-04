@@ -7,8 +7,8 @@ import Typography from 'material-ui/Typography'
 import AddCircle from 'material-ui-icons/AddCircle'
 import { green } from 'material-ui/styles/colors'
 
-const TopupTransaction = ({ description, amount, classes }) => (
-  <ListItem>
+const TopupTransaction = ({ id, description, amount, classes, onClick }) => (
+  <ListItem onClick={() => onClick(id)}>
     <Avatar className={classes.avatar}>
       <AddCircle />
     </Avatar>
@@ -23,9 +23,11 @@ const TopupTransaction = ({ description, amount, classes }) => (
 )
 
 TopupTransaction.propTypes = {
+  id: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   amount: PropTypes.string.isRequired,
-  classes: PropTypes.object.isRequired
+  classes: PropTypes.object.isRequired,
+  onClick: PropTypes.func.isRequired
 }
 
 const styleSheet = createStyleSheet('TopupTransaction', (theme) => ({
