@@ -16,7 +16,7 @@ import { calendarFormats } from '../../config.json'
 const formatDate = (date) => moment(+date).calendar(null, calendarFormats.date)
 
 const getTransaction = (transaction, onClick) => {
-  const { id, merchant, description, notes, amount, currency, category, metadata = {} } = transaction
+  const { id, merchant, description, notes, amount, currency, category, originator, metadata = {} } = transaction
   const displayAmount = formatAmount(currency, amount)
 
   if (merchant) {
@@ -49,6 +49,7 @@ const getTransaction = (transaction, onClick) => {
       description={description}
       notes={notes}
       amount={displayAmount}
+      originator={originator}
       onClick={onClick}
     />
   )
@@ -103,6 +104,7 @@ const TransactionsWithData = graphql(gql`
       currency
       category
       created
+      originator
       metadata {
         is_topup
       }

@@ -24,6 +24,7 @@ module.exports = `
     created: String
     merchant: Merchant
     metadata: TransactionMeta
+    originator: Boolean
   }
 
   type Merchant {

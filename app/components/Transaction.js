@@ -3,10 +3,14 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
+import { titleCase } from 'change-case'
 import Card, { CardContent } from 'material-ui/Card'
+import List, { ListItem, ListItemText } from 'material-ui/List'
 import Grid from 'material-ui/Grid'
 import Avatar from 'material-ui/Avatar'
+import AttachFile from 'material-ui-icons/AttachFile'
 import Typography from 'material-ui/Typography'
+import CategoryAvatar from './CategoryAvatar'
 import { calendarFormats } from '../../config.json'
 import formatAmount from '../utils/format-amount'
 
@@ -15,7 +19,7 @@ const formatDate = (date) => moment(date).calendar(null, calendarFormats.dateTim
 const Transaction = ({ data: { transaction }, classes }) => {
   if (!transaction) return <p>Loading...</p>
 
-  const { merchant, created, currency, amount } = transaction
+  const { merchant, created, currency, amount, category } = transaction
   const displayAmount = formatAmount(currency, amount)
 
   return (
@@ -50,6 +54,18 @@ const Transaction = ({ data: { transaction }, classes }) => {
           <Typography type='body2'>
             {formatDate(created)}
           </Typography>
+          <List>
+            <ListItem>
+              <CategoryAvatar category={category} />
+              <ListItemText primary={titleCase(category)} />
+            </ListItem>
+            <ListItem button>
+              <Avatar>
+                <AttachFile />
+              </Avatar>
+              <ListItemText primary='Add photo or note' />
+            </ListItem>
+          </List>
         </CardContent>
       </Card>
     </section>
