@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
 import { Link } from 'react-router-dom'
 
-class Accounts extends Component {
+class AccountList extends Component {
   shouldComponentUpdate ({ data: { accounts = [] }, history }) {
     if (accounts.length === 1) {
       history.replace(`/account/${accounts[0].id}`)
@@ -27,16 +27,16 @@ class Accounts extends Component {
   }
 }
 
-Accounts.propTypes = {
+AccountList.propTypes = {
   data: PropTypes.object.isRequired
 }
 
 export default graphql(gql`
-  query Accounts {
+  query AccountList {
     accounts {
       id
       description
       type
     }
   }
-`)(Accounts)
+`)(AccountList)

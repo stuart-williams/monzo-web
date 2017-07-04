@@ -5,7 +5,7 @@ import { ListItem, ListItemText } from 'material-ui/List'
 import Typography from 'material-ui/Typography'
 import CategoryAvatar from './CategoryAvatar'
 
-const MerchantTransaction = ({ id, logo, name, category, amount, onClick }) => (
+const MerchantTransactionListItem = ({ id, logo, name, category, amount, onClick }) => (
   <ListItem
     button
     onClick={() => onClick(id)}
@@ -18,7 +18,7 @@ const MerchantTransaction = ({ id, logo, name, category, amount, onClick }) => (
   </ListItem>
 )
 
-MerchantTransaction.propTypes = {
+MerchantTransactionListItem.propTypes = {
   id: PropTypes.string.isRequired,
   logo: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
@@ -27,4 +27,4 @@ MerchantTransaction.propTypes = {
   onClick: PropTypes.func.isRequired
 }
 
-export default MerchantTransaction
+export default MerchantTransactionListItem

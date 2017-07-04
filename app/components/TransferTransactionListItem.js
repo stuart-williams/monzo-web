@@ -8,7 +8,7 @@ import SwapHoriz from 'material-ui-icons/SwapHoriz'
 import Typography from 'material-ui/Typography'
 import { green } from 'material-ui/styles/colors'
 
-const TransferTransaction = ({ id, description, amount, notes, originator, onClick, classes }) => (
+const TransferTransactionListItem = ({ id, description, amount, notes, originator, onClick, classes }) => (
   <ListItem
     button
     onClick={() => onClick(id)}
@@ -29,7 +29,7 @@ const TransferTransaction = ({ id, description, amount, notes, originator, onCli
   </ListItem>
 )
 
-TransferTransaction.propTypes = {
+TransferTransactionListItem.propTypes = {
   id: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   amount: PropTypes.string.isRequired,
@@ -39,10 +39,10 @@ TransferTransaction.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-const styleSheet = createStyleSheet('TransferTransaction', (theme) => ({
+const styleSheet = createStyleSheet('TransferTransactionListItem', (theme) => ({
   incomingAmount: {
     color: green[400]
   }
 }))
 
-export default withStyles(styleSheet)(TransferTransaction)
+export default withStyles(styleSheet)(TransferTransactionListItem)

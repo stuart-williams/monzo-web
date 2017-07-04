@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
@@ -55,47 +55,52 @@ const getTransaction = (transaction, onClick) => {
   )
 }
 
-const Transactions = ({ data: { transactions }, classes }, { router }) => {
-  if (!transactions) {
+class TransactionList extends Component {
+  render () {
+    const { data: { transactions }, classes } = this.props
+    const { router } = this.context
+
+    if (!transactions) {
+      return (
+        <div className={classes.progressCt}>
+          <CircularProgress className={classes.progress} />
+        </div>
+      )
+    }
+
+    const grouped = groupTransactionsByDate(transactions)
+    const sortedDates = Object.keys(grouped).sort((a, b) => b - a)
+    const onClick = (transactionId) => router.history.push(`/transaction/${transactionId}`)
+
     return (
-      <div className={classes.progressCt}>
-        <CircularProgress className={classes.progress} />
-      </div>
+      <List>
+        {sortedDates.map((date) => (
+          <div key={date}>
+            <ListSubheader>{formatDate(date)}</ListSubheader>
+            {grouped[date].map((transaction, i) => (
+              <div key={transaction.id}>
+                {getTransaction(transaction, onClick)}
+                {grouped[date][i + 1] && <Divider inset />}
+              </div>
+            ))}
+          </div>
+        ))}
+      </List>
     )
   }
-
-  const grouped = groupTransactionsByDate(transactions)
-  const sortedDates = Object.keys(grouped).sort((a, b) => b - a)
-  const onClick = (transactionId) => router.history.push(`/transaction/${transactionId}`)
-
-  return (
-    <List>
-      {sortedDates.map((date) => (
-        <div key={date}>
-          <ListSubheader>{formatDate(date)}</ListSubheader>
-          {grouped[date].map((transaction, i) => (
-            <div key={transaction.id}>
-              {getTransaction(transaction, onClick)}
-              {grouped[date][i + 1] && <Divider inset />}
-            </div>
-          ))}
-        </div>
-      ))}
-    </List>
-  )
 }
 
-Transactions.propTypes = {
+TransactionList.propTypes = {
   data: PropTypes.object.isRequired,
   classes: PropTypes.object.isRequired
 }
 
-Transactions.contextTypes = {
+TransactionList.contextTypes = {
   router: PropTypes.object.isRequired
 }
 
-const TransactionsWithData = graphql(gql`
-  query Account($accountId: String!, $since: String) {
+const TransactionListWithData = graphql(gql`
+  query Transactions($accountId: String!, $since: String) {
     transactions(accountId: $accountId, since: $since) {
       id
       description
@@ -121,9 +126,9 @@ const TransactionsWithData = graphql(gql`
         since
       }
     })
-  })(Transactions)
+  })(TransactionList)
 
-const styleSheet = createStyleSheet('Transactions', (theme) => ({
+const styleSheet = createStyleSheet('TransactionList', (theme) => ({
   progressCt: {
     display: 'flex',
     justifyContent: 'center'
@@ -133,4 +138,4 @@ const styleSheet = createStyleSheet('Transactions', (theme) => ({
   }
 }))
 
-export default withStyles(styleSheet)(TransactionsWithData)
+export default withStyles(styleSheet)(TransactionListWithData)

@@ -27,7 +27,7 @@ export const categoryMap = {
   general: General
 }
 
-const CategoryIcon = ({ category, classes }) => {
+const CategoryAvatar = ({ category, classes }) => {
   const Icon = categoryMap[category] || General
 
   return (
@@ -37,12 +37,12 @@ const CategoryIcon = ({ category, classes }) => {
   )
 }
 
-CategoryIcon.propTypes = {
+CategoryAvatar.propTypes = {
   category: PropTypes.string.isRequired,
   classes: PropTypes.object.isRequired
 }
 
-const styleSheet = createStyleSheet('CategoryIcon', (theme) => ({
+const styleSheet = createStyleSheet('CategoryAvatar', (theme) => ({
   eating_out: {
     backgroundColor: red[300]
   },
@@ -72,4 +72,4 @@ const styleSheet = createStyleSheet('CategoryIcon', (theme) => ({
   }
 }))
 
-export default withStyles(styleSheet)(CategoryIcon)
+export default withStyles(styleSheet)(CategoryAvatar)
