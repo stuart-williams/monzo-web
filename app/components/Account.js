@@ -5,7 +5,7 @@ import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Paper from 'material-ui/Paper'
 import AccountHeader from './AccountHeader'
-import Transactions from './Transactions'
+import TransactionList from './TransactionList'
 
 const Account = ({ match, data, classes }) => {
   const accountId = match.params.accountId
@@ -21,7 +21,7 @@ const Account = ({ match, data, classes }) => {
         spentToday={spentToday}
       />
       <Paper className={classes.transactions}>
-        <Transactions
+        <TransactionList
           accountId={accountId}
           since={moment().subtract(1, 'month').format()}
         />

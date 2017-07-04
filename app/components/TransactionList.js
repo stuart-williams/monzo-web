@@ -7,9 +7,9 @@ import { withStyles, createStyleSheet } from 'material-ui/styles'
 import List, { ListSubheader } from 'material-ui/List'
 import Divider from 'material-ui/Divider'
 import { CircularProgress } from 'material-ui/Progress'
-import MerchantTransaction from './MerchantTransaction'
-import TopupTransaction from './TopupTransaction'
-import TransferTransaction from './TransferTransaction'
+import MerchantTransactionListItem from './MerchantTransactionListItem'
+import TopupTransactionListItem from './TopupTransactionListItem'
+import TransferTransactionListItem from './TransferTransactionListItem'
 import groupTransactionsByDate from '../utils/group-transactions-by-date'
 import { calendarFormats } from '../../config.json'
 
@@ -21,7 +21,7 @@ const getTransaction = (transaction, onClick) => {
 
   if (merchant) {
     return (
-      <MerchantTransaction
+      <MerchantTransactionListItem
         id={id}
         logo={merchant.logo}
         name={merchant.name}
@@ -34,7 +34,7 @@ const getTransaction = (transaction, onClick) => {
 
   if (metadata.is_topup === 'true') {
     return (
-      <TopupTransaction
+      <TopupTransactionListItem
         id={id}
         description={description}
         amount={displayAmount}
@@ -44,7 +44,7 @@ const getTransaction = (transaction, onClick) => {
   }
 
   return (
-    <TransferTransaction
+    <TransferTransactionListItem
       id={id}
       description={description}
       notes={notes}

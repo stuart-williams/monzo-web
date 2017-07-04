@@ -11,7 +11,7 @@ import { MuiThemeProvider } from 'material-ui/styles'
 import theme from './styles/monzo-theme'
 
 // Route Components
-import Accounts from './components/Accounts'
+import AccountList from './components/AccountList'
 import Account from './components/Account'
 import Transaction from './components/Transaction'
 
@@ -20,7 +20,7 @@ render(
     <ApolloProvider client={apolloClient}>
       <Router>
         <div>
-          <Route exact path='/' component={Accounts} />
+          <Route exact path='/' component={AccountList} />
           <Route path='/account/:accountId' component={Account} />
           <Route path='/transaction/:transactionId' component={Transaction} />
         </div>
