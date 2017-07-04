@@ -6,7 +6,10 @@ import SwapHoriz from 'material-ui-icons/SwapHoriz'
 import Typography from 'material-ui/Typography'
 
 const TransferTransaction = ({ id, description, amount, notes, onClick }) => (
-  <ListItem onClick={() => onClick(id)}>
+  <ListItem
+    button
+    onClick={() => onClick(id)}
+  >
     <Avatar>
       {description.startsWith('Transfer to ') ? <SwapHoriz /> : description[0]}
     </Avatar>

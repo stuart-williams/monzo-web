@@ -8,7 +8,10 @@ import AddCircle from 'material-ui-icons/AddCircle'
 import { green } from 'material-ui/styles/colors'
 
 const TopupTransaction = ({ id, description, amount, classes, onClick }) => (
-  <ListItem onClick={() => onClick(id)}>
+  <ListItem
+    button
+    onClick={() => onClick(id)}
+  >
     <Avatar className={classes.avatar}>
       <AddCircle />
     </Avatar>
