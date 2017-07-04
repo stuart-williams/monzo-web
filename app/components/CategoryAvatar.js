@@ -1,0 +1,59 @@
+import React from 'react'
+import PropTypes from 'prop-types'
+import { withStyles, createStyleSheet } from 'material-ui/styles'
+import Avatar from 'material-ui/Avatar'
+import EatingOut from 'material-ui-icons/Restaurant'
+import Transport from 'material-ui-icons/DirectionsCar'
+import Groceries from 'material-ui-icons/LocalGroceryStore'
+import Cash from 'material-ui-icons/AttachMoney'
+import Bills from 'material-ui-icons/LightbulbOutline'
+import Entertainment from 'material-ui-icons/SentimentVerySatisfied'
+import Shopping from 'material-ui-icons/ShoppingBasket'
+import Holidays from 'material-ui-icons/FlightTakeoff'
+import Expenses from 'material-ui-icons/AccountBalanceWallet'
+import General from 'material-ui-icons/Help'
+
+const icons = {
+  eating_out: EatingOut,
+  transport: Transport,
+  groceries: Groceries,
+  cash: Cash,
+  bills: Bills,
+  entertainment: Entertainment,
+  shopping: Shopping,
+  holidays: Holidays,
+  expenses: Expenses,
+  general: General
+}
+
+const CategoryIcon = ({ category, classes }) => {
+  const Icon = icons[category] || General
+
+  return (
+    <Avatar className={classes[category]}>
+      <Icon />
+    </Avatar>
+  )
+}
+
+CategoryIcon.propTypes = {
+  category: PropTypes.string.isRequired,
+  classes: PropTypes.object.isRequired
+}
+
+const styleSheet = createStyleSheet('CategoryIcon', (theme) => ({
+  eating_out: {
+    backgroundColor: 'red'
+  },
+  transport: {},
+  groceries: {},
+  cash: {},
+  bills: {},
+  entertainment: {},
+  shopping: {},
+  holidays: {},
+  expenses: {},
+  general: {}
+}))
+
+export default withStyles(styleSheet)(CategoryIcon)
