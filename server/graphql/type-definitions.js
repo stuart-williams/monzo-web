@@ -40,5 +40,6 @@ module.exports = `
     accounts: [Account]
     account(accountId: String!): Account
     transactions(accountId: String!, limit: Int, since: String, before: String): [Transaction]
+    transaction(transactionId: String!): Transaction
   }
 `

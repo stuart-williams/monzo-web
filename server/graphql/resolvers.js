@@ -24,16 +24,18 @@ module.exports = {
   },
 
   Query: {
-    accounts: (parent, args, req) => {
-      return fetch(req.session.user, 'accounts')
-        .then(({ accounts }) => accounts)
-    },
+    accounts: (parent, args, req) =>
+      fetch(req.session.user, 'accounts')
+        .then(({ accounts }) => accounts),
 
-    account: (parent, { accountId }, req) => {
-      return fetch(req.session.user, 'accounts')
-        .then(({ accounts }) => accounts.find(({ id }) => id === accountId))
-    },
+    account: (parent, { accountId }, req) =>
+      fetch(req.session.user, 'accounts')
+        .then(({ accounts }) => accounts.find(({ id }) => id === accountId)),
 
-    transactions: (parent, args, req) => transactions(req.session.user, args)
+    transactions: (parent, args, req) => transactions(req.session.user, args),
+
+    transaction: (parent, { transactionId }, req) =>
+      fetch(req.session.user, `transactions/${transactionId}?expand[]=merchant`)
+        .then(({ transaction }) => transaction)
   }
 }

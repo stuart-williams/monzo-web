@@ -1,4 +1,5 @@
 const express = require('express')
+const graphqlHTTP = require('express-graphql')
 const app = express()
 const request = require('request')
 const session = require('express-session')
@@ -35,6 +36,11 @@ app.use('/graphql', (req, res) => {
     })
     .catch((error) => res.status(500).json(error))
 })
+
+app.use('/graphiql', graphqlHTTP({
+  schema,
+  graphiql: true
+}))
 
 app.get('/login', (req, res) => {
   res.render('login', {
