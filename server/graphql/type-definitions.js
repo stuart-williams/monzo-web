@@ -30,6 +30,13 @@ module.exports = `
     id: String
     name: String
     logo: String
+    address: MerchantAddress
+  }
+
+  type MerchantAddress {
+    short_formatted: String
+    latitude: Float
+    longitude: Float
   }
 
   type TransactionMeta {

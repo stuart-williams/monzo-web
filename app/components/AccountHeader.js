@@ -13,7 +13,7 @@ const AccountHeader = ({ balance = 0, currency, spentToday = 0, className, class
     className={classNames(className, classes.header)}
   >
     <Grid container>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs>
         <Typography
           type='subheading'
           gutterBottom
@@ -28,7 +28,7 @@ const AccountHeader = ({ balance = 0, currency, spentToday = 0, className, class
           {formatAmount(currency, balance)}
         </Typography>
       </Grid>
-      <Grid item xs={12} sm={6}>
+      <Grid item xs>
         <Typography
           type='subheading'
           gutterBottom
