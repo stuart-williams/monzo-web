@@ -11,10 +11,10 @@ import Entertainment from 'material-ui-icons/SentimentVerySatisfied'
 import Shopping from 'material-ui-icons/ShoppingBasket'
 import Holidays from 'material-ui-icons/FlightTakeoff'
 import Expenses from 'material-ui-icons/AccountBalanceWallet'
-import General from 'material-ui-icons/Help'
+import General from 'material-ui-icons/Public'
 import { red, amber, orange, blueGrey, teal, cyan, pink, purple, lime } from 'material-ui/styles/colors'
 
-const icons = {
+export const categoryMap = {
   eating_out: EatingOut,
   transport: Transport,
   groceries: Groceries,
@@ -28,7 +28,7 @@ const icons = {
 }
 
 const CategoryIcon = ({ category, classes }) => {
-  const Icon = icons[category] || General
+  const Icon = categoryMap[category] || General
 
   return (
     <Avatar className={classes[category]}>

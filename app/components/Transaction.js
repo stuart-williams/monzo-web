@@ -10,7 +10,7 @@ import Grid from 'material-ui/Grid'
 import Avatar from 'material-ui/Avatar'
 import AttachFile from 'material-ui-icons/AttachFile'
 import Typography from 'material-ui/Typography'
-import CategoryAvatar from './CategoryAvatar'
+import CategoryAvatar, { categoryMap } from './CategoryAvatar'
 import { calendarFormats } from '../../config.json'
 import formatAmount from '../utils/format-amount'
 
@@ -19,8 +19,9 @@ const formatDate = (date) => moment(date).calendar(null, calendarFormats.dateTim
 const Transaction = ({ data: { transaction }, classes }) => {
   if (!transaction) return <p>Loading...</p>
 
-  const { merchant, created, currency, amount, category } = transaction
+  const { merchant, created, currency, amount, category, description, notes } = transaction
   const displayAmount = formatAmount(currency, amount)
+  const displayCategory = categoryMap[category] ? titleCase(category) : 'General'
 
   return (
     <section className={classes.container}>
@@ -28,10 +29,12 @@ const Transaction = ({ data: { transaction }, classes }) => {
         <CardContent>
           <Grid container>
             <Grid item xs>
-              <Avatar
-                className={classes.avatar}
-                src={merchant.logo}
-              />
+              {merchant ? (
+                <Avatar
+                  className={classes.avatar}
+                  src={merchant.logo}
+                />
+              ) : null}
             </Grid>
             <Grid item xs>
               <Typography
@@ -46,25 +49,29 @@ const Transaction = ({ data: { transaction }, classes }) => {
             type='title'
             gutterBottom
           >
-            {merchant.name}
+            {merchant ? merchant.name : description}
           </Typography>
-          <Typography type='subheading'>
-            {merchant.address.short_formatted}
-          </Typography>
+          {merchant ? (
+            <Typography type='subheading'>
+              {merchant.address.short_formatted}
+            </Typography>
+          ) : null}
           <Typography type='body2'>
             {formatDate(created)}
           </Typography>
           <List>
             <ListItem>
               <CategoryAvatar category={category} />
-              <ListItemText primary={titleCase(category)} />
+              <ListItemText primary={displayCategory} />
             </ListItem>
-            <ListItem button>
-              <Avatar>
-                <AttachFile />
-              </Avatar>
-              <ListItemText primary='Add photo or note' />
-            </ListItem>
+            {notes ? (
+              <ListItem>
+                <Avatar>
+                  <AttachFile />
+                </Avatar>
+                <ListItemText primary={notes} />
+              </ListItem>
+            ) : null}
           </List>
         </CardContent>
       </Card>
@@ -85,6 +92,8 @@ const TransactionWithData = graphql(gql`
       currency
       category
       created
+      description
+      notes
       merchant {
         name
         logo
