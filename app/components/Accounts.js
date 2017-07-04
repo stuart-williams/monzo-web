@@ -1,20 +1,30 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
 import { Link } from 'react-router-dom'
 
-const Accounts = ({ data }) => {
-  const { accounts } = data
+class Accounts extends Component {
+  shouldComponentUpdate ({ data: { accounts = [] }, history }) {
+    if (accounts.length === 1) {
+      history.replace(`/account/${accounts[0].id}`)
+      return false
+    }
+    return true
+  }
 
-  if (!accounts) return <p>Loading...</p>
+  render () {
+    const { accounts } = this.props.data
 
-  return (
-    <ul>
-      {accounts.map(({ id, description, type }) => (
-        <Link key={id} to={`/account/${id}`}>{description} {type}</Link>
-      ))}
-    </ul>
-  )
+    if (!accounts) return <p>Loading...</p>
+
+    return (
+      <ul>
+        {accounts.map(({ id, description, type }) => (
+          <Link key={id} to={`/account/${id}`}>{description} {type}</Link>
+        ))}
+      </ul>
+    )
+  }
 }
 
 Accounts.propTypes = {
