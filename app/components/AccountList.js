@@ -31,7 +31,7 @@ AccountList.propTypes = {
   data: PropTypes.object.isRequired
 }
 
-export default graphql(gql`
+const accountListQuery = gql`
   query AccountList {
     accounts {
       id
@@ -39,4 +39,6 @@ export default graphql(gql`
       type
     }
   }
-`)(AccountList)
+`
+
+export default graphql(accountListQuery)(AccountList)

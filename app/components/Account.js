@@ -1,33 +1,54 @@
-import React from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment'
+import Rx from 'rxjs/Rx'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Paper from 'material-ui/Paper'
 import AccountHeader from './AccountHeader'
 import TransactionList from './TransactionList'
 
-const Account = ({ match, data, classes }) => {
-  const accountId = match.params.accountId
-  const { account = { balance: {} } } = data
-  const { balance, currency, spend_today: spentToday } = account.balance
+class Account extends Component {
+  componentDidMount () {
+    const scrollElem = document.getElementById('infinite-scroller') // TODO: Replace with ref
+    const scrollEvent$ = Rx.Observable.fromEvent(scrollElem, 'scroll')
 
-  return (
-    <section className={classes.container}>
-      <AccountHeader
-        className={classes.header}
-        currency={currency}
-        balance={balance}
-        spentToday={spentToday}
-      />
-      <Paper className={classes.transactions}>
-        <TransactionList
-          accountId={accountId}
-          since={moment().subtract(1, 'month').format()}
+    const userScrolledDown$ = scrollEvent$
+      .map(({ target }) => ({
+        scrollHeight: target.scrollHeight,
+        scrollTop: target.scrollTop,
+        clientHeight: target.clientHeight
+      }))
+
+    userScrolledDown$.subscribe(console.log)
+  }
+
+  render () {
+    const { match, data, classes } = this.props
+    const accountId = match.params.accountId
+    const { account = { balance: {} } } = data
+    const { balance, currency, spend_today: spentToday } = account.balance
+
+    return (
+      <section className={classes.container}>
+        <AccountHeader
+          className={classes.header}
+          currency={currency}
+          balance={balance}
+          spentToday={spentToday}
         />
-      </Paper>
-    </section>
-  )
+        <Paper
+          id='infinite-scroller'
+          className={classes.transactions}
+        >
+          <TransactionList
+            accountId={accountId}
+            since={moment().subtract(1, 'month').format()}
+          />
+        </Paper>
+      </section>
+    )
+  }
 }
 
 Account.propTypes = {
@@ -36,7 +57,7 @@ Account.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-const AccountWithData = graphql(gql`
+const accountQuery = gql`
   query Account($accountId: String!) {
     account(accountId: $accountId) {
       id
@@ -48,13 +69,15 @@ const AccountWithData = graphql(gql`
       }
     }
   }
-`, {
-    options: ({ match }) => ({
-      variables: {
-        accountId: match.params.accountId
-      }
-    })
-  })(Account)
+`
+
+const AccountWithData = graphql(accountQuery, {
+  options: ({ match }) => ({
+    variables: {
+      accountId: match.params.accountId
+    }
+  })
+})(Account)
 
 const styleSheet = createStyleSheet('Account', (theme) => ({
   container: {

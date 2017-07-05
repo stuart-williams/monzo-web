@@ -94,7 +94,7 @@ TransactionList.contextTypes = {
   router: PropTypes.object.isRequired
 }
 
-const TransactionListWithData = graphql(gql`
+const transactionsQuery = gql`
   query Transactions($accountId: String!, $since: String) {
     transactions(accountId: $accountId, since: $since) {
       id
@@ -114,14 +114,16 @@ const TransactionListWithData = graphql(gql`
       }
     }
   }
-`, {
-    options: ({ accountId, since }) => ({
-      variables: {
-        accountId,
-        since
-      }
-    })
-  })(TransactionList)
+`
+
+const TransactionListWithData = graphql(transactionsQuery, {
+  options: ({ accountId, since }) => ({
+    variables: {
+      accountId,
+      since
+    }
+  })
+})(TransactionList)
 
 const styleSheet = createStyleSheet('TransactionList', (theme) => ({
   progressCt: {

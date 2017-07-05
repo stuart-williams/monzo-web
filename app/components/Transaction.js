@@ -84,7 +84,7 @@ Transaction.propTypes = {
   classes: PropTypes.object.isRequired
 }
 
-const TransactionWithData = graphql(gql`
+const transactionQuery = gql`
   query Transaction($transactionId: String!) {
     transaction(transactionId: $transactionId) {
       id
@@ -103,13 +103,15 @@ const TransactionWithData = graphql(gql`
       }
     }
   }
-`, {
-    options: ({ match }) => ({
-      variables: {
-        transactionId: match.params.transactionId
-      }
-    })
-  })(Transaction)
+`
+
+const TransactionWithData = graphql(transactionQuery, {
+  options: ({ match }) => ({
+    variables: {
+      transactionId: match.params.transactionId
+    }
+  })
+})(Transaction)
 
 const styleSheet = createStyleSheet('Transaction', (theme) => ({
   container: {
