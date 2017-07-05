@@ -15,6 +15,18 @@ import { calendarFormats } from '../../config.json'
 
 const formatDate = (date) => moment(+date).calendar(null, calendarFormats.date)
 
+//   const scrollElem = document.getElementById('infinite-scroller') // TODO: Replace with ref
+//   const scrollEvent$ = Rx.Observable.fromEvent(scrollElem, 'scroll')
+//
+//   const userScrolledDown$ = scrollEvent$
+//     .map(({ target }) => ({
+//       scrollHeight: target.scrollHeight,
+//       scrollTop: target.scrollTop,
+//       clientHeight: target.clientHeight
+//     }))
+//
+//   userScrolledDown$.subscribe(console.log)
+
 const getTransaction = (transaction, onClick) => {
   const { id, merchant, description, notes, amount, currency, category, originator, metadata = {} } = transaction
   const displayAmount = formatAmount(currency, amount)
