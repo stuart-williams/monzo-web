@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import Paper from 'material-ui/Paper'
@@ -19,10 +18,7 @@ const Account = ({ account, accountId, classes }) => {
         spentToday={spentToday}
       />
       <Paper className={classes.transactions}>
-        <TransactionList
-          accountId={accountId}
-          since={moment().subtract(1, 'month').format()}
-        />
+        <TransactionList accountId={accountId} />
       </Paper>
     </section>
   )

@@ -4,6 +4,7 @@ import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
 import List, { ListSubheader } from 'material-ui/List'
+import Button from 'material-ui/Button'
 import Divider from 'material-ui/Divider'
 import { CircularProgress } from 'material-ui/Progress'
 import MerchantTransactionListItem from './MerchantTransactionListItem'
@@ -67,10 +68,10 @@ const getTransaction = (transaction, onClick) => {
   )
 }
 
-const TransactionList = ({ data: { transactions }, classes }, { router }) => {
-  if (!transactions) {
+const TransactionList = ({ transactions, classes, loadMore }, { router }) => {
+  if (!transactions.length) {
     return (
-      <div className={classes.progressCt}>
+      <div className={classes.alignCenter}>
         <CircularProgress className={classes.progress} />
       </div>
     )
@@ -93,13 +94,19 @@ const TransactionList = ({ data: { transactions }, classes }, { router }) => {
           ))}
         </div>
       ))}
+      <div className={classes.alignCenter}>
+        <Button onClick={loadMore}>
+          Load More
+        </Button>
+      </div>
     </List>
   )
 }
 
 TransactionList.propTypes = {
-  data: PropTypes.object.isRequired,
-  classes: PropTypes.object.isRequired
+  transactions: PropTypes.array.isRequired,
+  classes: PropTypes.object.isRequired,
+  loadMore: PropTypes.func.isRequired
 }
 
 TransactionList.contextTypes = {
@@ -107,8 +114,8 @@ TransactionList.contextTypes = {
 }
 
 const transactionsQuery = gql`
-  query Transactions($accountId: String!, $since: String) {
-    transactions(accountId: $accountId, since: $since) {
+  query Transactions($accountId: String!, $before: String, $since: String) {
+    transactions(accountId: $accountId, before: $before, since: $since) {
       id
       description
       notes
@@ -128,17 +135,36 @@ const transactionsQuery = gql`
   }
 `
 
+// TODO: State here is nasty
+let since = 1
+let before = 2
+
 const TransactionListWithData = graphql(transactionsQuery, {
-  options: ({ accountId, since }) => ({
+  options: ({ accountId }) => ({
     variables: {
       accountId,
-      since
+      since: moment().subtract(since, 'month').format()
+    }
+  }),
+  props: ({ data: { transactions = [], fetchMore } }) => ({
+    transactions,
+    loadMore () {
+      return fetchMore({
+        variables: {
+          before: moment().subtract(since++, 'month').format(),
+          since: moment().subtract(before++, 'month').format()
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev
+          return { transactions: [ ...prev.transactions, ...fetchMoreResult.transactions ] }
+        }
+      })
     }
   })
 })(TransactionList)
 
 const styleSheet = createStyleSheet('TransactionList', (theme) => ({
-  progressCt: {
+  alignCenter: {
     display: 'flex',
     justifyContent: 'center'
   },
