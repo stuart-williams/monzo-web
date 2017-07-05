@@ -135,24 +135,25 @@ const transactionsQuery = gql`
   }
 `
 
-// TODO: State here is nasty
-let since = 1
-let before = 2
+let since = moment().subtract(1, 'month').format()
 
 const TransactionListWithData = graphql(transactionsQuery, {
   options: ({ accountId }) => ({
     variables: {
       accountId,
-      since: moment().subtract(since, 'month').format()
+      since
     }
   }),
   props: ({ data: { transactions = [], fetchMore } }) => ({
     transactions,
     loadMore () {
+      const before = since
+      since = moment(since).subtract(1, 'month').format()
+
       return fetchMore({
         variables: {
-          before: moment().subtract(since++, 'month').format(),
-          since: moment().subtract(before++, 'month').format()
+          before,
+          since
         },
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev
