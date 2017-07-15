@@ -8,11 +8,8 @@ import SwapHoriz from 'material-ui-icons/SwapHoriz'
 import Typography from 'material-ui/Typography'
 import { green } from 'material-ui/styles/colors'
 
-const TransferTransactionListItem = ({ id, description, amount, notes, originator, onClick, classes }) => (
-  <ListItem
-    button
-    onClick={() => onClick(id)}
-  >
+const TransferTransactionListItem = ({ id, description, amount, notes, originator, classes }) => (
+  <ListItem>
     <Avatar>
       {description.startsWith('Transfer to ') ? <SwapHoriz /> : description[0]}
     </Avatar>
@@ -35,7 +32,6 @@ TransferTransactionListItem.propTypes = {
   amount: PropTypes.string.isRequired,
   notes: PropTypes.string.isRequired,
   originator: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
   classes: PropTypes.object.isRequired
 }
 
