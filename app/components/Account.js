@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
-import Paper from 'material-ui/Paper'
 import AccountHeader from './AccountHeader'
 import TransactionList from './TransactionList'
 
@@ -17,9 +16,7 @@ const Account = ({ account, accountId, classes }) => {
         balance={balance}
         spentToday={spentToday}
       />
-      <Paper className={classes.transactions}>
-        <TransactionList accountId={accountId} />
-      </Paper>
+      <TransactionList accountId={accountId} />
     </section>
   )
 }
@@ -69,13 +66,6 @@ const styleSheet = createStyleSheet('Account', (theme) => ({
     position: 'fixed',
     boxSizing: 'border-box',
     zIndex: theme.zIndex.appBar
-  },
-
-  transactions: {
-    paddingTop: 91,
-    boxSizing: 'border-box',
-    overflow: 'scroll',
-    height: '100%'
   }
 }))
 

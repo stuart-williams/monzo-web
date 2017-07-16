@@ -1,12 +1,13 @@
-import React from 'react'
+import React, { Component } from 'react'
+import { findDOMNode } from 'react-dom'
 import PropTypes from 'prop-types'
+import Rx from 'rxjs'
 import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
+import Paper from 'material-ui/Paper'
 import List, { ListSubheader } from 'material-ui/List'
-import Button from 'material-ui/Button'
 import Divider from 'material-ui/Divider'
-import { CircularProgress } from 'material-ui/Progress'
 import MerchantTransactionListItem from './MerchantTransactionListItem'
 import TopupTransactionListItem from './TopupTransactionListItem'
 import TransferTransactionListItem from './TransferTransactionListItem'
@@ -15,18 +16,11 @@ import groupTransactionsByDate from '../utils/group-transactions-by-date'
 import { calendarFormats } from '../../config.json'
 
 const formatDate = (date) => moment(+date).calendar(null, calendarFormats.date)
+const subtractSomeTime = (d) => moment(d).subtract(1, 'month').format()
 
-//   const scrollElem = document.getElementById('infinite-scroller') // TODO: Replace with ref
-//   const scrollEvent$ = Rx.Observable.fromEvent(scrollElem, 'scroll')
-//
-//   const userScrolledDown$ = scrollEvent$
-//     .map(({ target }) => ({
-//       scrollHeight: target.scrollHeight,
-//       scrollTop: target.scrollTop,
-//       clientHeight: target.clientHeight
-//     }))
-//
-//   userScrolledDown$.subscribe(console.log)
+const isUserScrollingDown = (positions) => positions[0].sT < positions[1].sT
+const isScrollExpectedPercent = (position, percent) => ((position.sT + position.cH) / position.sH) > (percent / 100)
+const shouldLoadMore = (positions) => isUserScrollingDown(positions) && isScrollExpectedPercent(positions[1], 70)
 
 const getTransaction = (transaction, onClick) => {
   const { id, merchant, description, notes, amount, currency, category, originator, metadata = {} } = transaction
@@ -68,39 +62,65 @@ const getTransaction = (transaction, onClick) => {
   )
 }
 
-const TransactionList = ({ transactions, classes, loadMore }, { router }) => {
-  if (!transactions.length) {
-    return (
-      <div className={classes.alignCenter}>
-        <CircularProgress className={classes.progress} />
-      </div>
-    )
+class TransactionList extends Component {
+  constructor (props) {
+    super(props)
+    this.pagination = { since: subtractSomeTime() }
   }
 
-  const grouped = groupTransactionsByDate(transactions)
-  const sortedDates = Object.keys(grouped).sort((a, b) => b - a)
-  const onClick = (transactionId) => router.history.push(`/transaction/${transactionId}`)
+  nextPagination () {
+    const { since } = this.pagination
+    this.pagination = { before: since, since: subtractSomeTime(since) }
+    return this.pagination
+  }
 
-  return (
-    <List>
-      {sortedDates.map((date) => (
-        <div key={date}>
-          <ListSubheader>{formatDate(date)}</ListSubheader>
-          {grouped[date].map((transaction, i) => (
-            <div key={transaction.id}>
-              {getTransaction(transaction, onClick)}
-              {grouped[date][i + 1] && <Divider inset />}
+  componentDidMount () {
+    const { loadMore } = this.props
+
+    this.paginationSubscription = Rx.Observable.fromEvent(this.scroller, 'scroll')
+      .map((e) => ({
+        sH: e.target.scrollHeight,
+        sT: e.target.scrollTop,
+        cH: e.target.clientHeight
+      }))
+      .pairwise()
+      .filter(shouldLoadMore)
+      .exhaustMap(() => Rx.Observable.fromPromise(loadMore(this.nextPagination())))
+      .subscribe()
+  }
+
+  componentWillUnmount () {
+    this.paginationSubscription.unsubscribe()
+  }
+
+  render () {
+    const { transactions, classes } = this.props
+    const { router } = this.context
+    const grouped = groupTransactionsByDate(transactions)
+    const sortedDates = Object.keys(grouped).sort((a, b) => b - a)
+    const onClick = (transactionId) => router.history.push(`/transaction/${transactionId}`)
+
+    return (
+      <Paper
+        className={classes.scroller}
+        ref={(node) => { this.scroller = findDOMNode(node) }}
+      >
+        <List>
+          {sortedDates.map((date) => (
+            <div key={date}>
+              <ListSubheader>{formatDate(date)}</ListSubheader>
+              {grouped[date].map((transaction, i) => (
+                <div key={transaction.id}>
+                  {getTransaction(transaction, onClick)}
+                  {grouped[date][i + 1] && <Divider inset />}
+                </div>
+              ))}
             </div>
           ))}
-        </div>
-      ))}
-      <div className={classes.alignCenter}>
-        <Button onClick={loadMore}>
-          Load More
-        </Button>
-      </div>
-    </List>
-  )
+        </List>
+      </Paper>
+    )
+  }
 }
 
 TransactionList.propTypes = {
@@ -135,26 +155,18 @@ const transactionsQuery = gql`
   }
 `
 
-let since = moment().subtract(1, 'month').format()
-
 const TransactionListWithData = graphql(transactionsQuery, {
   options: ({ accountId }) => ({
     variables: {
       accountId,
-      since
+      since: subtractSomeTime()
     }
   }),
   props: ({ data: { transactions = [], fetchMore } }) => ({
     transactions,
-    loadMore () {
-      const before = since
-      since = moment(since).subtract(1, 'month').format()
-
+    loadMore (variables) {
       return fetchMore({
-        variables: {
-          before,
-          since
-        },
+        variables,
         updateQuery: (prev, { fetchMoreResult }) => {
           if (!fetchMoreResult) return prev
           return { transactions: [ ...prev.transactions, ...fetchMoreResult.transactions ] }
@@ -165,12 +177,11 @@ const TransactionListWithData = graphql(transactionsQuery, {
 })(TransactionList)
 
 const styleSheet = createStyleSheet('TransactionList', (theme) => ({
-  alignCenter: {
-    display: 'flex',
-    justifyContent: 'center'
-  },
-  progress: {
-    margin: theme.spacing.unit * 2
+  scroller: {
+    paddingTop: 91,
+    boxSizing: 'border-box',
+    overflow: 'scroll',
+    height: '100%'
   }
 }))
 
