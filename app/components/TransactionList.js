@@ -1,7 +1,13 @@
+import 'rxjs/add/operator/map'
+import 'rxjs/add/operator/pairwise'
+import 'rxjs/add/operator/filter'
+import 'rxjs/add/operator/exhaustMap'
+import { fromEvent } from 'rxjs/observable/fromEvent'
+import { fromPromise } from 'rxjs/observable/fromPromise'
+
 import React, { Component } from 'react'
 import { findDOMNode } from 'react-dom'
 import PropTypes from 'prop-types'
-import Rx from 'rxjs'
 import moment from 'moment'
 import { gql, graphql } from 'react-apollo'
 import { withStyles, createStyleSheet } from 'material-ui/styles'
@@ -70,7 +76,7 @@ class TransactionList extends Component {
   componentDidMount () {
     const { loadMore } = this.props
 
-    this.paginationSubscription = Rx.Observable.fromEvent(this.scroller, 'scroll')
+    this.paginationSubscription = fromEvent(this.scroller, 'scroll')
       .map((e) => ({
         sH: e.target.scrollHeight,
         sT: e.target.scrollTop,
@@ -78,7 +84,7 @@ class TransactionList extends Component {
       }))
       .pairwise()
       .filter((positions) => isUserScrollingDown(positions) && isScrollExpectedPercent(positions[1], 70))
-      .exhaustMap(() => Rx.Observable.fromPromise(loadMore(this.nextPagination())))
+      .exhaustMap(() => fromPromise(loadMore(this.nextPagination())))
       .subscribe()
   }
 
