@@ -5,6 +5,7 @@ const request = require('request')
 const session = require('express-session')
 const RedisStore = require('connect-redis')(session)
 const { graphql } = require('graphql')
+const path = require('path')
 const bodyParser = require('body-parser')
 
 const schema = require('./graphql/schema')
@@ -17,6 +18,7 @@ require('dotenv').config()
 app.use(bodyParser.json())
 app.use(express.static('public'))
 app.set('view engine', 'pug')
+app.set('views', './app/views')
 
 app.use(session({
   secret: '1234',
@@ -84,7 +86,7 @@ app.get('/auth-redirect', (req, res) => {
 
 app.get('*', (req, res) => {
   if (!req.session.user) res.redirect('/login')
-  res.render('index', { user: req.session.user })
+  res.sendFile(path.resolve(__dirname, '../public/index.html'))
 })
 
 app.listen(port, () => console.log(`Monzo Web listening on port ${port}`))

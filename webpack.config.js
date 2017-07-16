@@ -1,4 +1,6 @@
+const webpack = require('webpack')
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const rootPath = path.join(__dirname, 'app')
 const distPath = path.join(__dirname, 'public')
@@ -6,8 +8,9 @@ const distPath = path.join(__dirname, 'public')
 module.exports = {
   entry: path.join(rootPath, 'main.js'),
   output: {
-    filename: '[name].js',
-    path: distPath
+    filename: '[name].[hash].js',
+    path: distPath,
+    publicPath: '/'
   },
   devtool: 'source-map',
   module: {
@@ -34,5 +37,16 @@ module.exports = {
         }
       }
     ]
-  }
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: path.join(rootPath, 'views/index.html')
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks (module, count) {
+        return module.context && module.context.indexOf('node_modules') > -1
+      }
+    })
+  ]
 }
