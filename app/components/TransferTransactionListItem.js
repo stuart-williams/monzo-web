@@ -8,29 +8,33 @@ import SwapHoriz from 'material-ui-icons/SwapHoriz'
 import Typography from 'material-ui/Typography'
 import { green } from 'material-ui/styles/colors'
 
-const TransferTransactionListItem = ({ id, description, amount, notes, originator, color, classes }) => (
-  <ListItem>
-    {description.startsWith('Transfer to ') ? (
-      <Avatar>
-        <SwapHoriz />
-      </Avatar>
-    ) : (
-      <Avatar style={color ? { backgroundColor: color[50], color: color[200] } : undefined}>
-        {description[0]}
-      </Avatar>
-    )}
-    <ListItemText
-      primary={description}
-      secondary={notes}
-    />
-    <Typography
-      type='subheading'
-      className={classNames({ [ classes.incomingAmount ]: !originator })}
-    >
-      {`${!originator ? '+' : ''}${amount}`}
-    </Typography>
-  </ListItem>
-)
+const TransferTransactionListItem = ({ id, description, amount, notes, originator, color, classes }) => {
+  const style = color ? { backgroundColor: color[50], color: color[200] } : undefined
+
+  return (
+    <ListItem>
+      {description.startsWith('Transfer to ') ? (
+        <Avatar>
+          <SwapHoriz />
+        </Avatar>
+      ) : (
+        <Avatar style={style}>
+          {description[0]}
+        </Avatar>
+      )}
+      <ListItemText
+        primary={description}
+        secondary={notes}
+      />
+      <Typography
+        type='subheading'
+        className={classNames({ [ classes.incomingAmount ]: !originator })}
+      >
+        {`${!originator ? '+' : ''}${amount}`}
+      </Typography>
+    </ListItem>
+  )
+}
 
 TransferTransactionListItem.propTypes = {
   id: PropTypes.string.isRequired,

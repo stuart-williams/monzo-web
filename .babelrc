@@ -4,6 +4,8 @@
     "react"
   ],
   "plugins": [
+    "transform-react-inline-elements",
+    "transform-react-constant-elements",
     [
       "transform-object-rest-spread",
       {

@@ -1,7 +1,6 @@
 const webpack = require('webpack')
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const rootPath = path.join(__dirname, 'app')
 const distPath = path.join(__dirname, 'public')
@@ -13,7 +12,6 @@ module.exports = {
     path: distPath,
     publicPath: '/'
   },
-  devtool: 'source-map',
   module: {
     rules: [
       {
@@ -40,10 +38,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new BundleAnalyzerPlugin({
-      analyzerMode: 'static',
-      openAnalyzer: false
-    }),
     new HtmlWebpackPlugin({
       template: path.join(rootPath, 'views/index.html')
     }),
@@ -55,6 +49,14 @@ module.exports = {
     }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'manifest'
+    }),
+    new webpack.DefinePlugin({
+      'process.env.NODE_ENV': JSON.stringify('production')
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
     })
   ]
 }
