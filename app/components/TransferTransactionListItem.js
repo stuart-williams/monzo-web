@@ -8,11 +8,17 @@ import SwapHoriz from 'material-ui-icons/SwapHoriz'
 import Typography from 'material-ui/Typography'
 import { green } from 'material-ui/styles/colors'
 
-const TransferTransactionListItem = ({ id, description, amount, notes, originator, classes }) => (
+const TransferTransactionListItem = ({ id, description, amount, notes, originator, color, classes }) => (
   <ListItem>
-    <Avatar>
-      {description.startsWith('Transfer to ') ? <SwapHoriz /> : description[0]}
-    </Avatar>
+    {description.startsWith('Transfer to ') ? (
+      <Avatar>
+        <SwapHoriz />
+      </Avatar>
+    ) : (
+      <Avatar style={color ? { backgroundColor: color[50], color: color[200] } : undefined}>
+        {description[0]}
+      </Avatar>
+    )}
     <ListItemText
       primary={description}
       secondary={notes}
@@ -32,6 +38,7 @@ TransferTransactionListItem.propTypes = {
   amount: PropTypes.string.isRequired,
   notes: PropTypes.string.isRequired,
   originator: PropTypes.bool.isRequired,
+  color: PropTypes.object,
   classes: PropTypes.object.isRequired
 }
 

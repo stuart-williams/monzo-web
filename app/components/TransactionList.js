@@ -22,17 +22,14 @@ const subtractSomeTime = (d) => moment(d).subtract(1, 'month').format()
 const isUserScrollingDown = (positions) => positions[0].sT < positions[1].sT
 const isScrollExpectedPercent = (position, percent) => ((position.sT + position.cH) / position.sH) > (percent / 100)
 
-const getTransaction = (transaction, onClick) => {
-  const { id, merchant, description, notes, amount, currency, category, originator, counterparty = {}, metadata = {} } = transaction
+const transactionComponent = (transaction, onClick) => {
+  const { merchant, amount, currency, metadata = {} } = transaction
   const displayAmount = formatAmount(currency, amount)
 
   if (merchant) {
     return (
       <MerchantTransactionListItem
-        id={id}
-        logo={merchant.logo}
-        name={merchant.name}
-        category={category}
+        {...transaction}
         amount={displayAmount}
         onClick={onClick}
       />
@@ -42,8 +39,7 @@ const getTransaction = (transaction, onClick) => {
   if (metadata.is_topup === 'true') {
     return (
       <TopupTransactionListItem
-        id={id}
-        description={description}
+        {...transaction}
         amount={displayAmount}
         onClick={onClick}
       />
@@ -52,12 +48,8 @@ const getTransaction = (transaction, onClick) => {
 
   return (
     <TransferTransactionListItem
-      id={id}
-      description={description}
-      notes={notes}
+      {...transaction}
       amount={displayAmount}
-      originator={originator}
-      counterparty={counterparty}
       onClick={onClick}
     />
   )
@@ -112,7 +104,7 @@ class TransactionList extends Component {
               <ListSubheader>{formatDate(date)}</ListSubheader>
               {grouped[date].map((transaction, i) => (
                 <div key={transaction.id}>
-                  {getTransaction(transaction, onClick)}
+                  {transactionComponent(transaction, onClick)}
                   {grouped[date][i + 1] && <Divider inset />}
                 </div>
               ))}

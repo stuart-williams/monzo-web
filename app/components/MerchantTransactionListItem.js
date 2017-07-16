@@ -5,10 +5,12 @@ import { ListItem, ListItemText } from 'material-ui/List'
 import Typography from 'material-ui/Typography'
 import CategoryAvatar from './CategoryAvatar'
 
-const MerchantTransactionListItem = ({ id, logo, name, category, amount }) => (
+const MerchantTransactionListItem = ({ id, merchant, category, amount }) => (
   <ListItem>
-    {logo ? <Avatar src={logo} /> : <CategoryAvatar category={category} />}
-    <ListItemText primary={name} />
+    {merchant.logo
+      ? <Avatar src={merchant.logo} />
+      : <CategoryAvatar category={category} />}
+    <ListItemText primary={merchant.name} />
     <Typography type='subheading'>
       {amount}
     </Typography>
@@ -17,8 +19,7 @@ const MerchantTransactionListItem = ({ id, logo, name, category, amount }) => (
 
 MerchantTransactionListItem.propTypes = {
   id: PropTypes.string.isRequired,
-  logo: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
+  merchant: PropTypes.object.isRequired,
   category: PropTypes.string.isRequired,
   amount: PropTypes.string.isRequired
 }
