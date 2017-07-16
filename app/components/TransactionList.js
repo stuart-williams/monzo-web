@@ -13,6 +13,7 @@ import TopupTransactionListItem from './TopupTransactionListItem'
 import TransferTransactionListItem from './TransferTransactionListItem'
 import formatAmount from '../utils/format-amount'
 import groupTransactionsByDate from '../utils/group-transactions-by-date'
+import adaptTransactions from '../utils/adapt-transactions'
 import { calendarFormats } from '../../config.json'
 
 const formatDate = (date) => moment(+date).calendar(null, calendarFormats.date)
@@ -20,10 +21,9 @@ const subtractSomeTime = (d) => moment(d).subtract(1, 'month').format()
 
 const isUserScrollingDown = (positions) => positions[0].sT < positions[1].sT
 const isScrollExpectedPercent = (position, percent) => ((position.sT + position.cH) / position.sH) > (percent / 100)
-const shouldLoadMore = (positions) => isUserScrollingDown(positions) && isScrollExpectedPercent(positions[1], 70)
 
 const getTransaction = (transaction, onClick) => {
-  const { id, merchant, description, notes, amount, currency, category, originator, metadata = {} } = transaction
+  const { id, merchant, description, notes, amount, currency, category, originator, counterparty = {}, metadata = {} } = transaction
   const displayAmount = formatAmount(currency, amount)
 
   if (merchant) {
@@ -57,6 +57,7 @@ const getTransaction = (transaction, onClick) => {
       notes={notes}
       amount={displayAmount}
       originator={originator}
+      counterparty={counterparty}
       onClick={onClick}
     />
   )
@@ -84,7 +85,7 @@ class TransactionList extends Component {
         cH: e.target.clientHeight
       }))
       .pairwise()
-      .filter(shouldLoadMore)
+      .filter((positions) => isUserScrollingDown(positions) && isScrollExpectedPercent(positions[1], 70))
       .exhaustMap(() => Rx.Observable.fromPromise(loadMore(this.nextPagination())))
       .subscribe()
   }
@@ -147,6 +148,10 @@ const transactionsQuery = gql`
       metadata {
         is_topup
       }
+      counterparty {
+        user_id
+        name
+      }
       merchant {
         name
         logo
@@ -163,7 +168,7 @@ const TransactionListWithData = graphql(transactionsQuery, {
     }
   }),
   props: ({ data: { transactions = [], fetchMore } }) => ({
-    transactions,
+    transactions: adaptTransactions(transactions),
     loadMore (variables) {
       return fetchMore({
         variables,

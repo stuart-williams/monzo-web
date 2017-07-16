@@ -23,8 +23,9 @@ module.exports = `
     category: String
     created: String
     merchant: Merchant
-    metadata: TransactionMeta
     originator: Boolean
+    metadata: TransactionMeta
+    counterparty: TransactionCounterparty
   }
 
   type Merchant {
@@ -42,6 +43,12 @@ module.exports = `
 
   type TransactionMeta {
     is_topup: String
+  }
+
+  type TransactionCounterparty {
+    user_id: String
+    name: String
+    prefered_name: String
   }
 
   type Query {
