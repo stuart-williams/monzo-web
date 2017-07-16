@@ -54,7 +54,8 @@
     "nodemon": "^1.11.0",
     "style-loader": "^0.18.2",
     "url-loader": "^0.5.9",
-    "webpack": "^3.0.0"
+    "webpack": "^3.0.0",
+    "webpack-bundle-analyzer": "^2.8.3"
   },
   "scripts": {
     "start": "nodemon server",
