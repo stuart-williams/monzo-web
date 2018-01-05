@@ -24,7 +24,10 @@ app.use(session({
   secret: '1234',
   resave: false,
   saveUninitialized: true,
-  store: new RedisStore()
+  store: new RedisStore({
+    host: 'redis',
+    port: 6379
+  })
 }))
 
 app.use('/graphql', (req, res) => {
@@ -89,4 +92,4 @@ app.get('*', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../public/index.html'))
 })
 
-app.listen(port, () => console.log(`Monzo Web listening on port ${port}`))
+app.listen(port, () => console.log(`Monzo Web listening on port http://localhost:${port}`))
